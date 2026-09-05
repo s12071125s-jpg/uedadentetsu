@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>別所線を太陽光で走らせる ── 計画のはじまりから、いまの見直しまで</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF;--card:#FFFFFF;
+  --ink:#221E20;--body:#5C555A;
+  --pink:#FF0084;--pink-ink:#D4006E;--pink-bg:#FFE9F3;
+  --coral:#C4006A;--coral-bg:#FFE1EF;
+  --sun:#D9932A;--sun-bg:#FBF2E1;
+  --line:#EAE6E8;--r:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  font-size:16px;line-height:1.9;min-height:100vh;
+  padding:14px 12px calc(96px + env(safe-area-inset-bottom));
+}
+.deck{max-width:820px;margin:0 auto;}
+.slide{display:none;background:var(--card);border-radius:0;padding:26px 4px 30px;position:relative;}
+.slide:before{content:"";position:absolute;top:0;left:0;right:0;height:7px;background:var(--pink);border-radius:4px;}
+.pop{display:block;background:var(--pink);color:#fff;border-radius:16px;padding:14px 16px;text-align:center;transform:rotate(-2.5deg);margin:18px 0 6px;}
+.pop .k,.pop .s{display:block;font-size:.75rem;font-weight:500;line-height:1.7;}
+.pop .m{display:block;font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN",sans-serif;font-weight:700;font-size:1.3rem;line-height:1.4;margin:.2em 0;letter-spacing:.02em;}
+@media(min-width:680px){.pop{position:absolute;top:18px;right:6px;width:252px;margin:0;}}
+.slide.on{display:block;animation:in .28s ease-out;}
+@keyframes in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none;}}
+
+.chapter{display:inline-flex;gap:.7em;align-items:center;background:var(--pink);color:#fff;border-radius:999px;padding:.4em 1em;font-size:.78rem;font-weight:500;letter-spacing:.03em;}
+.chapter b{font-weight:700;}
+h1{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN",sans-serif;font-weight:700;font-size:1.75rem;line-height:1.45;margin:.7em 0 .5em;}
+.lede{color:var(--body);margin:0 0 1.4em;font-size:1rem;line-height:1.85;}
+p{margin:0 0 1.1em;}
+strong{font-weight:700;}
+
+.cards{display:grid;gap:12px;margin:0 0 1.3em;}
+@media(min-width:680px){.cards.three{grid-template-columns:repeat(3,1fr);}.cards.two{grid-template-columns:repeat(2,1fr);}}
+.c{border:1px solid var(--line);border-radius:var(--r);padding:16px;}
+.c .n{color:var(--pink-ink);font-weight:700;font-size:.85rem;line-height:1;}
+.c h3{margin:.6em 0 .4em;font-size:1.05rem;font-weight:700;}
+.c p{margin:0;color:var(--body);font-size:.94rem;line-height:1.8;}
+
+.callout{border-left:6px solid var(--coral);background:var(--coral-bg);border-radius:0 12px 12px 0;padding:16px 18px;font-weight:500;font-size:1.03rem;line-height:1.75;}
+.callout.calm{border-left-color:var(--pink);background:var(--pink-bg);}
+.callout.warn{border-left-color:var(--sun);background:var(--sun-bg);}
+.callout p:last-child{margin:0;}
+.callout p:first-child{margin-top:0;}
+
+ul.plain{margin:0 0 1.2em;padding-left:1.25em;}
+ul.plain li{margin-bottom:.7em;color:var(--body);}
+ul.plain li strong{color:var(--ink);}
+
+.time{margin:0 0 1.3em;}
+.time .e{display:flex;gap:14px;padding:0 0 16px;position:relative;}
+.time .e:before{content:"";position:absolute;left:5px;top:14px;bottom:0;width:2px;background:var(--line);}
+.time .e:last-child:before{display:none;}
+.time .dot{width:12px;height:12px;border-radius:50%;background:var(--pink);flex:0 0 12px;margin-top:7px;position:relative;z-index:1;}
+.time .e.now .dot{background:var(--pink);box-shadow:0 0 0 5px var(--pink-bg);}
+.time .e.now .when{display:flex;align-items:center;gap:.6em;flex-wrap:wrap;}
+.time .e.now .when:after{content:"いま ここ";background:var(--pink);color:#fff;border-radius:999px;padding:.2em .85em;font-size:.72rem;letter-spacing:.04em;line-height:1.7;}
+.time .e.now .what{color:var(--ink);}
+.time .when{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:.95rem;color:var(--pink-ink);}
+.time .e.now .when{color:var(--pink-ink);}
+.time .what{color:var(--body);font-size:.95rem;line-height:1.75;}
+.time .what b{color:var(--ink);font-weight:700;}
+
+.num{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 1.3em;}
+.num .item{flex:1 1 200px;border:1px solid var(--line);border-radius:var(--r);padding:16px;}
+.num .v{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:1.45rem;color:var(--pink);line-height:1.3;}
+.num .k{color:var(--body);font-size:.92rem;line-height:1.75;margin-top:.3em;}
+
+figure{margin:0 0 1.2em;}
+figure svg{width:100%;height:auto;display:block;}
+figcaption{color:var(--body);font-size:.9rem;line-height:1.8;margin-top:.8em;}
+
+dl.terms{margin:0;}
+dl.terms dt{font-weight:700;margin-top:1em;}
+dl.terms dt:first-child{margin-top:0;}
+dl.terms dd{margin:.15em 0 0;color:var(--body);font-size:.95rem;}
+
+.contact .row{border-bottom:1px solid var(--line);padding:14px 0;}
+.contact .row:last-child{border-bottom:0;}
+.contact .name,.contact .what{display:block;}
+.contact .name{font-weight:700;}
+.contact .tel{display:block;font-family:"Zen Maru Gothic",sans-serif;font-weight:700;color:var(--pink);font-size:1.2rem;text-decoration:none;}
+.contact .what{color:var(--body);font-size:.9rem;}
+
+.src{color:var(--body);font-size:.86rem;line-height:1.8;word-break:break-all;}
+.src li{margin-bottom:.6em;}
+
+.nav{position:fixed;left:0;right:0;bottom:0;padding:12px 12px calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border-top:1px solid var(--line);}
+.nav button{font-family:inherit;font-weight:700;font-size:.95rem;background:var(--pink);color:#fff;border:0;border-radius:999px;padding:.85em 1.3em;cursor:pointer;}
+.nav button:disabled{opacity:.3;cursor:default;}
+.nav button:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
+.dots{display:flex;gap:6px;align-items:center;}
+.dots i{width:7px;height:7px;border-radius:50%;background:#F5C6DE;cursor:pointer;display:block;}
+.dots i.on{background:var(--coral);transform:scale(1.35);}
+.count{color:var(--body);font-size:.85rem;min-width:3.8em;text-align:center;font-variant-numeric:tabular-nums;}
+@media(max-width:560px){.dots{display:none;}h1{font-size:1.5rem;}.slide{padding:20px 2px 26px;}}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- 01 -->
+<section class="slide on">
+  <span class="chapter"><b>01</b> はじめに</span>
+  <div class="pop">
+    <span class="k">全国12件のうちのひとつに選ばれた</span>
+    <span class="m">脱炭素先行地域事業</span>
+    <span class="s">長野県上田市　2023年11月選定</span>
+  </div>
+  <h1>別所線を、太陽光で<br>走らせる計画があります。</h1>
+  <p class="lede">上田市が国に選ばれて進めている事業です。いま、その一番の目玉が変わろうとしています。この資料は、そもそも何のために始まった計画なのか、というところから順に説明します。</p>
+  <div class="callout calm">この資料は市の公式なお知らせではありません。市のホームページ、環境省の公開資料、新聞報道をもとに個人がまとめたものです。2026年9月時点。</div>
+</section>
+
+<!-- 02 -->
+<section class="slide">
+  <span class="chapter"><b>02</b> はじまり</span>
+  <h1>上田市には、別々の<br>課題が2つありました。</h1>
+  <div class="cards two">
+    <div class="c"><div class="n">課題 1</div><h3>二酸化炭素を減らす</h3><p>上田市は2050年までに二酸化炭素の排出を実質ゼロにすると決めています。2021年には気候非常事態を表明しました。しかし削減には大きなお金がかかります。</p></div>
+    <div class="c"><div class="n">課題 2</div><h3>別所線を残す</h3><p>別所線は1970年代から何度も廃止の危機にありました。2019年の台風19号では千曲川に架かる橋が崩れ、市が費用を出して復旧させています。</p></div>
+  </div>
+  <div class="callout">この2つを、ひとつの事業で同時に解こうとしたのが今回の計画です。</div>
+</section>
+
+<!-- 03 -->
+<section class="slide">
+  <span class="chapter"><b>03</b> はじまり</span>
+  <h1>国の制度に手を挙げて、<br>選ばれました。</h1>
+  <p>環境省には<strong>「脱炭素先行地域」</strong>という制度があります。二酸化炭素を減らす取り組みのモデルとなる地域を全国から選び、事業費の3分の2を国が出すというものです。</p>
+  <p>ただし、脱炭素だけの提案は選ばれません。地域の課題も一緒に解決することが条件です。上田市は「別所線を再生可能エネルギーで走らせ、同時に利用者を増やして路線を守る」という案を出しました。</p>
+  <div class="callout calm">2023年11月7日、上田市は第4回の脱炭素先行地域に選ばれました。全国から選ばれた12件のうちの1つで、「ローカル鉄道の活性化と脱炭素」のモデルとされました。</div>
+</section>
+
+<!-- 04 -->
+<section class="slide">
+  <span class="chapter"><b>04</b> これまでの流れ</span>
+  <h1>ここまでの経緯</h1>
+  <div class="time">
+    <div class="e"><span class="dot"></span><div><div class="when">2023年8月</div><div class="what">上田市が、上田電鉄・上田商工会議所・八十二銀行・上田信用金庫など<b>民間8者と共同で計画を提案</b></div></div></div>
+    <div class="e"><span class="dot"></span><div><div class="when">2023年11月</div><div class="what">環境省が<b>脱炭素先行地域に選定</b></div></div></div>
+    <div class="e"><span class="dot"></span><div><div class="when">2024年7月</div><div class="what">事業を行う会社<b>「株式会社サントエナジーうえだ」を設立</b>。上田市が50.3%を出資</div></div></div>
+    <div class="e"><span class="dot"></span><div><div class="when">2024年秋〜</div><div class="what">対象エリアの自治会で<b>住民説明会</b>。屋根を貸してもらう協力の呼びかけ</div></div></div>
+    <div class="e"><span class="dot"></span><div><div class="when">2025年</div><div class="what">事業開始。秋から順次、再生可能エネルギーの供給がスタート</div></div></div>
+    <div class="e now"><span class="dot"></span><div><div class="when">2026年</div><div class="what">市議会全員協議会で、<b>計画変更を国に申請する方針</b>を説明</div></div></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="slide">
+  <span class="chapter"><b>05</b> 計画の中身</span>
+  <h1>計画は、3本の柱で<br>できています。</h1>
+  <div class="cards three">
+    <div class="c"><div class="n">柱 1</div><h3>つくる</h3><p>沿線の家の屋根、ため池の水面、空き地に太陽光パネルを設置します。合わせて約6,000kW分。</p></div>
+    <div class="c"><div class="n">柱 2</div><h3>とどける</h3><p>その電気を、線路沿いに引いた専用の電線で別所線に直接届けます。約7km。</p></div>
+    <div class="c"><div class="n">柱 3</div><h3>乗ってもらう</h3><p>電気の契約者に別所線で使えるポイントを付け、車から電車への乗り換えを促します。</p></div>
+  </div>
+  <div class="callout">このうち2番目が、国から「他にはない先進的な取り組み」と評価された部分でした。</div>
+</section>
+
+<!-- 06 -->
+<section class="slide">
+  <span class="chapter"><b>06</b> 前提の話</span>
+  <h1>そもそも電車は、どこから<br>電気をもらっている？</h1>
+  <p>線路の上に、電線が1本張ってあります。これが<strong>架線</strong>です。電車の屋根にある菱形の枠が架線に触れて電気を取り込み、モーターを回します。使った電気はレールを通って戻ります。</p>
+  <p>その架線に電気を送り出しているのが、線路のそばにある<strong>変電所</strong>です。ふだんは、電力会社の発電所から来た電気がここに入っています。</p>
+  <div class="callout calm">計画は、この「電力会社から来る電気」を、地元の屋根でつくった電気に置き換えるものでした。</div>
+</section>
+
+<!-- 07 -->
+<section class="slide">
+  <span class="chapter"><b>07</b> 計画の中身</span>
+  <h1>電気は、こう届く<br>はずでした。</h1>
+  <figure>
+<svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t1 d1">
+  <title id="t1">屋根の太陽光パネルから電車まで電気が届く経路</title>
+  <desc id="d1">自宅や遊休地のパネルの電気が専用の電線で変電所に集まり、架線を通って電車に入り、レールを通って戻る経路の図。</desc>
+  <g fill="none" stroke="#221E20" stroke-width="1.5">
+    <rect x="18" y="150" width="118" height="24" rx="6" fill="#FBF2E1" stroke="#D9932A"/>
+    <rect x="18" y="174" width="118" height="60" rx="8" fill="#fff"/>
+    <rect x="238" y="168" width="124" height="66" rx="10" fill="#FFE9F3" stroke="#FF0084"/>
+    <rect x="438" y="168" width="136" height="58" rx="12" fill="#FFE9F3" stroke="#FF0084"/>
+    <path d="M138 208 H226" marker-end="url(#ar)"/>
+    <path d="M364 194 H382 V104 H392" marker-end="url(#ar)"/>
+    <path d="M392 262 H376 V228 H364" marker-end="url(#ar)"/>
+    <path d="M398 100 V266 M612 100 V266" stroke="#A9A2A6"/>
+    <path d="M394 104 H620" stroke="#D9932A" stroke-width="3"/>
+    <path d="M506 168 V106" stroke="#D9932A" stroke-width="2"/>
+    <path d="M390 266 H626" stroke="#A9A2A6" stroke-width="3"/>
+  </g>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#221E20" stroke-width="1.7" stroke-linecap="round"/>
+    </marker>
+  </defs>
+  <g font-family="'Zen Kaku Gothic New',sans-serif" fill="#221E20" font-size="13">
+    <text x="77" y="167" text-anchor="middle" font-size="12" fill="#9A6A12">ソーラーパネル</text>
+    <text x="77" y="209" text-anchor="middle">自宅・遊休地</text>
+    <text x="182" y="196" text-anchor="middle" font-size="12" fill="#5C555A">専用の電線</text>
+    <text x="182" y="212" text-anchor="middle" font-size="12" fill="#5C555A">（自営線）</text>
+    <text x="300" y="196" text-anchor="middle">変電所</text>
+    <text x="300" y="216" text-anchor="middle" font-size="12" fill="#5C555A">直流に変える</text>
+    <text x="440" y="94" font-size="12" fill="#9A6A12">架線</text>
+    <text x="518" y="146" font-size="12" fill="#5C555A">パンタグラフ</text>
+    <text x="506" y="203" text-anchor="middle">電車</text>
+    <text x="398" y="288" text-anchor="middle" font-size="12" fill="#5C555A">架線柱</text>
+    <text x="600" y="288" text-anchor="middle" font-size="12" fill="#5C555A">レール（帰り道）</text>
+  </g>
+</svg>
+  <figcaption>あちこちのパネルの電気を1本にまとめ、線路沿いの専用電線で変電所まで運ぶ。あとはふだん通り、架線を流れて電車に届きます。</figcaption>
+  </figure>
+  <div class="callout warn">この専用電線を、上田電鉄がすでに持っている架線柱を借りて張る。ここが計画の心臓部でした。</div>
+</section>
+
+<!-- 08 -->
+<section class="slide">
+  <span class="chapter"><b>08</b> ねらい</span>
+  <h1>電気を送るほかに、<br>3つの目的がありました。</h1>
+  <div class="cards three">
+    <div class="c"><div class="n">1</div><h3>停電しても届く</h3><p>専用電線に避難所となる公共施設をつないでおけば、まわりが停電しても電気を送れます。</p></div>
+    <div class="c"><div class="n">2</div><h3>電気代が地域に残る</h3><p>いま電気代は地域の外へ出ていきます。地元の会社が受け取れば、地域の中で回ります。</p></div>
+    <div class="c"><div class="n">3</div><h3>別所線を守る</h3><p>乗車ポイントで利用者を増やす。使われる路線であることが、存続につながります。</p></div>
+  </div>
+</section>
+
+<!-- 09 -->
+<section class="slide">
+  <span class="chapter"><b>09</b> 対象</span>
+  <h1>うちには関係ない話では？</h1>
+  <p>屋根にパネルを付ける事業の対象は、塩田地域の6自治会です。<strong>下之郷・下本郷・東五加・中野・上本郷・十人</strong>。約2,207世帯が対象とされています。</p>
+  <p>ただ、お金の面では市全体の話になります。</p>
+  <div class="num">
+    <div class="item"><div class="v">3分の2</div><div class="k">国の交付金。もとは国民の税金です</div></div>
+    <div class="item"><div class="v">50.3%</div><div class="k">事業を行う会社の株式を、上田市が持っています</div></div>
+  </div>
+  <div class="callout calm">この事業がうまくいかなければ、株主である上田市が影響を受けます。</div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <span class="chapter"><b>10</b> お金</span>
+  <h1>お金は、誰が<br>出しているのか。</h1>
+  <div class="num">
+    <div class="item"><div class="v">55億5千万円</div><div class="k">事業費の総額（2024年度〜2028年度）</div></div>
+    <div class="item"><div class="v">その3分の2</div><div class="k">国の交付金。もとは国民の税金です</div></div>
+    <div class="item"><div class="v">残り3分の1</div><div class="k">上田市が過半数を出資する会社が、金融機関から借ります</div></div>
+  </div>
+  <p><strong>株式会社サントエナジーうえだ</strong>。2024年7月設立、資本金1,990万円。上田市が50.3%、ほかに上田交通、みやまパワーHD、和晃・TicketQRが各12.6%、上田商工会議所と上田市民エネルギーが各5%、上田信用金庫が2%を出資しています。</p>
+  <div class="callout">借りたお金は、住民から集める電気料金で返していく計画です。</div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <span class="chapter"><b>11</b> 屋根を貸す場合</span>
+  <h1>パネルの付け方は、<br>2つあります。</h1>
+  <div class="cards two">
+    <div class="c"><div class="n">A</div><h3>まるごとお任せ</h3><p>設置費用は0円。点検も修理も会社が担当し、15年たつと設備は住民のものになります。その間の電気は料金として払います。</p></div>
+    <div class="c"><div class="n">B</div><h3>分割購入</h3><p>自分で買って分割で払います。補助金が使え、最短6年で自分の所有に。完済後は支払いがなくなります。点検は自己管理です。</p></div>
+  </div>
+  <p>会社の試算では、発電5.8kWと蓄電池6.4kWhの組み合わせで、他社なら200万円以上のところ約150万円（分割購入の支払い総額）とされています。</p>
+  <div class="callout">「初期費用0円」は、費用がかからないという意味ではありません。長い契約に入る、という意味です。</div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <span class="chapter"><b>12</b> いま起きていること</span>
+  <h1>その心臓部が、<br>できないと分かりました。</h1>
+  <div class="callout calm">
+    <p><strong>確認できていること</strong></p>
+    <ul class="plain" style="margin-bottom:0">
+      <li>上田市は市議会全員協議会で、この事業の計画変更を環境省に申請すると明らかにしました。</li>
+      <li>理由は、事業の中心で国に先進性を認められた「マイクログリッド（小規模電力網）」の構築が難しいと判明したためです。</li>
+      <li>市は、沿線で脱炭素を目指す方針そのものは変わらないとしています。</li>
+    </ul>
+  </div>
+  <p style="margin-top:1.3em">マイクログリッドとは、専用電線と、それにつながる発電・蓄電の設備、避難所への供給までを含めた仕組み全体のことです。その中心が、架線柱を借りて張る約7kmの電線でした。</p>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <span class="chapter"><b>13</b> わからないこと</span>
+  <h1>いちばん知りたいことが、<br>まだ分かりません。</h1>
+  <div class="callout warn">
+    <ul class="plain" style="margin-bottom:0">
+      <li><strong>なぜ難しいのか。</strong>柱の強さなのか、法律の手続きなのか、費用が合わなかったのか。公表されていません。</li>
+      <li><strong>いつ分かったのか。</strong>この間も市は住民説明会を開き、屋根を貸す協力を呼びかけてきました。</li>
+      <li><strong>国の交付金はどうなるのか。</strong>減るのか、返すことになるのか。</li>
+      <li><strong>専用電線をやめたら何をするのか。</strong>避難所に電気を送る計画はどうなるのか。</li>
+      <li><strong>屋根にパネルを付ける事業は、これまで通り進むのか。</strong></li>
+    </ul>
+  </div>
+  <p style="margin-top:1.3em">なお、市が国に出した2023年度の進捗報告には、鉄道に関する法令や技術上の制約をふまえて設計を詰めた結果、設備や設置場所に変更が生じる可能性がある、と書かれていました。資材や人件費の高騰、電線ケーブルの不足への心配も記されています。</p>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <span class="chapter"><b>14</b> 言葉の説明</span>
+  <h1>むずかしい言葉を、<br>ひとことで。</h1>
+  <dl class="terms">
+    <dt>架線（かせん）</dt><dd>線路の上に張ってある電線。電車はここから電気をもらいます。</dd>
+    <dt>架線柱（かせんちゅう）</dt><dd>架線を支える柱。この柱を借りて別の電線を張る計画でした。</dd>
+    <dt>変電所（へんでんしょ）</dt><dd>電気をつくる場所ではなく、つくり変える場所。別所線の架線には直流1500ボルトが流れています。</dd>
+    <dt>自営線（じえいせん）</dt><dd>電力会社の設備を使わず、自分たちで引く電線のこと。</dd>
+    <dt>マイクログリッド</dt><dd>地域の中だけで電気をつくって配る、小さな電力の網。</dd>
+    <dt>脱炭素先行地域</dt><dd>二酸化炭素を減らす取り組みのモデルとして国が選ぶ地域。事業費の3分の2が国から出ます。</dd>
+  </dl>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <span class="chapter"><b>15</b> 聞いてみる</span>
+  <h1>気になったら、<br>ここに聞けます。</h1>
+  <p class="lede">市民が問い合わせて構わない話です。番号をタップすれば電話がかかります。</p>
+  <div class="contact">
+    <div class="row">
+      <span class="name">上田市 環境政策課 ゼロカーボンシティ推進担当</span>
+      <a class="tel" href="tel:0268716428">0268-71-6428</a>
+      <span class="what">計画変更の理由、交付金の扱い、今後の予定</span>
+    </div>
+    <div class="row">
+      <span class="name">上田市議会 議会事務局</span>
+      <a class="tel" href="tel:0268220452">0268-22-0452</a>
+      <span class="what">全員協議会でどう説明されたか、会社の経営状況の資料</span>
+    </div>
+    <div class="row">
+      <span class="name">サントエナジーうえだ 塩田営業所</span>
+      <a class="tel" href="tel:0268758673">0268-75-8673</a>
+      <span class="what">自宅へのパネル設置について</span>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide">
+  <span class="chapter"><b>16</b> 出典</span>
+  <h1>もとにした資料</h1>
+  <ul class="src">
+    <li>上田市「脱炭素先行地域」<br><a href="https://www.city.ueda.nagano.jp/soshiki/seikan/89115.html">city.ueda.nagano.jp/soshiki/seikan/89115.html</a></li>
+    <li>上田市「株式会社サントエナジーうえだを設立しました」<br><a href="https://www.city.ueda.nagano.jp/soshiki/seikan/101089.html">city.ueda.nagano.jp/soshiki/seikan/101089.html</a></li>
+    <li>環境省 脱炭素地域づくり支援サイト（計画提案書・進捗状況報告票）<br><a href="https://policies.env.go.jp/policy/roadmap/">policies.env.go.jp/policy/roadmap/</a></li>
+    <li>サントエナジーうえだ サービス紹介<br><a href="https://www.suntoenergy.co.jp/service/">suntoenergy.co.jp/service/</a></li>
+    <li>信濃毎日新聞デジタル 上田電鉄に関するニュース一覧<br><a href="https://www.shinmai.co.jp/news/list/uedadentetu">shinmai.co.jp/news/list/uedadentetu</a></li>
+  </ul>
+  <div class="callout warn">計画変更が市議会全員協議会で説明された日付は、報道からは特定できませんでした。事業費や設備の規模は計画時点の数字で、変更後に変わる可能性があります。</div>
+  <p style="margin-top:1.3em;color:var(--body);font-size:.9rem">作成日：2026年9月　作成者：</p>
+</section>
+
+</div>
+
+<nav class="nav">
+  <button id="prev" type="button">← まえ</button>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <span class="count" id="count"></span>
+  <button id="next" type="button">つぎ →</button>
+</nav>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,dots=document.getElementById('dots'),
+      prev=document.getElementById('prev'),next=document.getElementById('next'),
+      count=document.getElementById('count');
+  slides.forEach(function(_,n){
+    var d=document.createElement('i');
+    d.addEventListener('click',function(){go(n);});
+    dots.appendChild(d);
+  });
+  var marks=[].slice.call(dots.children);
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+    marks.forEach(function(m,k){m.classList.toggle('on',k===i);});
+    count.textContent=(i+1)+' / '+slides.length;
+    prev.disabled=(i===0);next.disabled=(i===slides.length-1);
+    window.scrollTo(0,0);
+  }
+  prev.addEventListener('click',function(){go(i-1);});
+  next.addEventListener('click',function(){go(i+1);});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight')go(i+1);
+    if(e.key==='ArrowLeft')go(i-1);
+  });
+  var x0=null,y0=null;
+  document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(x0===null)return;
+    var dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){go(dx<0?i+1:i-1);}
+    x0=null;y0=null;
+  },{passive:true});
+  go(0);
+})();
+</script>
+</body>
+</html>
